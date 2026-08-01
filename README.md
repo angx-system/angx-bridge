@@ -13,9 +13,10 @@ to move.
 
 angx-bridge carries ANGX feed updates over Reticulum when the internet
 is absent — LoRa, packet radio, satellite, whatever medium is actually
-available — hop by hop, to the nearest internet-connected device. That
-device injects the update into the Hypercore network. When internet
-returns, Hyperswarm resumes. The bridge steps aside.
+available — hop by hop, until they reach a device running both the
+ANGX client and angx-bridge with an internet connection. That device
+decodes the update and injects it into the Hypercore network. When
+internet returns, Hyperswarm resumes. The bridge steps aside.
 
 It does not change what is recorded. It does not decide what
 propagates. It moves the same signed feed by a different route when
@@ -25,17 +26,34 @@ the primary one is down.
 
 ## What it does
 
-Two transports, one identity. One master seed derives two child keys
-— one for the ANGX feed identity, one for the Reticulum destination.
-Twenty-four words on paper recovers both on a fresh device.
+Two transports, one identity. angx-bridge does not generate a new
+identity of its own. On whatever device it runs — a steward's laptop
+or a base's persistent device — it derives one additional child key,
+the Reticulum destination, from that device's existing ANGX seed. The
+ANGX feed identity is untouched; the Reticulum key is simply a sibling
+of it, backed up together with it, on that same device.
 
 When internet is present, Hyperswarm handles discovery and
 replication directly. When it is absent, angx-bridge carries the same
-feed updates over Reticulum instead, hop by hop, until they reach a
-device that can inject them back into the Hypercore network. Neither
-transport knows about the other. The bridge is what lets a steward,
-a base, or a partner chain keep moving without caring which one is
-active.
+feed updates over Reticulum instead, hop by hop, toward the network.
+Devices relaying the message in between need only plain Reticulum —
+they route encrypted packets without needing ANGX or angx-bridge
+installed at all.
+
+The message is only decoded and applied where both angx-client and
+angx-bridge are running together — that pairing is what lets a device
+recognize a Reticulum-carried update as an ANGX feed and write it to
+Hypercore. Neither side of a route needs to be a specific, named base.
+Whichever ANGX-client-and-bridge device the mesh reaches first, with
+internet access at that moment, injects the update. From there it
+propagates through Hyperswarm and the partner chain as normal.
+
+Because of this, bases operating in regions with unreliable
+connectivity — serving stewards who may drop offline often — should
+run angx-bridge as a standing service to that region, not only for
+their own logging. The base doesn't need to be the origin of a
+message to be useful; it only needs to be reachable by mesh and online
+when a message arrives.
 
 ---
 
