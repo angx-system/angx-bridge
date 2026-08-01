@@ -18,19 +18,29 @@ idle. ANGX behaves exactly as specified, with no bridge in the loop.
 — multi-hop routing, addressing, and fragmentation over unreliable
 radio — that Hypercore has no native mechanism for. When internet is
 absent, angx-bridge carries feed updates over whatever medium
-Reticulum has available — LoRa, packet radio, satellite — hop by hop,
-to the nearest internet-connected device. That device injects the
-update into the Hypercore network on the bridge's behalf. When
-internet returns, Hyperswarm resumes and angx-bridge steps aside
-again. Neither transport is aware of the other; the bridge is what
-decides which one is live.
+Reticulum has available — LoRa, packet radio, satellite — hop by hop.
+Devices relaying the message in between need only plain Reticulum;
+they route encrypted packets without any ANGX or angx-bridge
+component installed. The message is decoded and applied only where
+both angx-client and angx-bridge are running together, on a device
+that currently has internet access — that pairing is what recognizes
+a Reticulum-carried message as an ANGX feed update and injects it
+into the Hypercore network. There is no designated destination: the
+first such device the mesh reaches, with internet available at that
+moment, is the one that catches it. When internet returns to the
+originating device, Hyperswarm resumes there and angx-bridge steps
+aside again.
 
-**3. Identity** — one master seed, two child keys. One key is the
-ANGX feed identity, used exactly as the protocol expects. The other
-is the Reticulum destination, used only by angx-bridge. Both derive
-from the same seed, so a single recovery phrase — twenty-four words on
-paper — restores both on a fresh device. Losing the phrase loses both
-identities together; there is no recovering one without the other.
+**3. Identity** — angx-bridge introduces no new seed of its own. On
+whatever device it runs, it derives one additional child key — the
+Reticulum destination — from that device's existing ANGX seed, the
+same one that already produces the ANGX feed identity on that device.
+The two keys are siblings, backed up together: the existing recovery
+phrase for that device restores both on a fresh install. A steward's
+device and a base's device each hold their own independent seed and
+backup — angx-bridge never shares or merges identity across them.
+Losing a device's phrase loses both of that device's keys together;
+it has no bearing on any other device's identity.
 
 **4. Notification** — LXMF, Reticulum's native store-and-forward
 messaging, carries any message a local client wants delivered over the
