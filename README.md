@@ -22,6 +22,11 @@ It does not change what is recorded. It does not decide what
 propagates. It moves the same signed feed by a different route when
 the primary one is down.
 
+Like angx-reader's indexer, angx-bridge runs as a silent background
+process — no interface of its own, nothing to open. Reader pairs its
+background indexer with an optional GUI for viewing matches; bridge
+has no equivalent.
+
 ---
 
 ## What it does
@@ -38,7 +43,9 @@ replication directly. When it is absent, angx-bridge carries the same
 feed updates over Reticulum instead, hop by hop, toward the network.
 Devices relaying the message in between need only plain Reticulum —
 they route encrypted packets without needing ANGX or angx-bridge
-installed at all.
+installed at all. angx-bridge is a translator running at the two
+endpoints of a route, not something that needs to exist anywhere in
+between.
 
 The message is only decoded and applied where both angx-client and
 angx-bridge are running together — that pairing is what lets a device
@@ -53,7 +60,11 @@ connectivity — serving stewards who may drop offline often — should
 run angx-bridge as a standing service to that region, not only for
 their own logging. The base doesn't need to be the origin of a
 message to be useful; it only needs to be reachable by mesh and online
-when a message arrives.
+when a message arrives. A base already holds the largest local
+collection in its region, and running reader on top of that
+collection already makes it the primary source of matches for
+stewards nearby — running bridge as well extends that same role to
+connectivity, not just to knowledge.
 
 ---
 
