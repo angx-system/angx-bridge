@@ -8,6 +8,11 @@ angx-bridge runs on the same device as an ANGX client — a steward's
 laptop or a base's persistent device. It does not replace Hyperswarm.
 It stands in for it only when the internet is not there.
 
+It has no interface of its own. Like angx-reader's indexer, it runs
+as a background process — started once, running from boot, requiring
+no attention. Unlike reader, it produces nothing for anyone to look
+at; it only moves signed feed data from one place to another.
+
 ---
 
 **1. Primary path** — Hyperswarm. When internet is present, Hyperswarm
@@ -49,6 +54,30 @@ from anything running on the device. Sideband, an open-source
 Reticulum client, is where they arrive. angx-bridge does not generate
 notifications; it makes the channel available.
 
+---
+
+## Open Questions
+
+- **Store-and-forward duration.** If a relay device carries a message
+  but the next hop is unreachable, does it hold and retry, or drop the
+  message? Reticulum's LXMF layer has native store-and-forward
+  behavior — whether it already covers ANGX feed updates as proposed
+  here, or whether angx-bridge needs its own retry logic on top, is
+  unresolved and depends on Reticulum's actual guaranteed behavior,
+  not a design choice to make in the abstract.
+  
+- **Attachments over Reticulum.** Signals themselves are small — a
+  `learning` signal's attachment, referenced separately, can run up to
+  10MB. Radio-based transport is not built for that. Does angx-bridge
+  carry attachments at all when offline, or only the pointer signal,
+  with the attachment fetched once real internet returns? Not decided.
+  
+- **Multiple relay-capable devices in range.** If two devices running
+  both angx-client and angx-bridge, both with internet, are reachable
+  by the same mesh at the same time, is there any coordination between
+  them, or a risk of the same update being injected twice? Not
+  addressed here.
+  
 ---
 
 Every component is open source, self-hostable, and replaceable.
