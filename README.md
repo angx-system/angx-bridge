@@ -66,6 +66,12 @@ collection already makes it the primary source of matches for
 stewards nearby — running bridge as well extends that same role to
 connectivity, not just to knowledge.
 
+angx-bridge only carries feed data — the signed updates themselves.
+Reticulum separately provides LXMF, its own store-and-forward messaging
+layer, and Sideband, an app that displays LXMF messages — available on
+the same mesh for anyone who wants a human-readable notification, but
+not something angx-bridge generates or depends on.
+
 ---
 
 ## What it doesn't do
