@@ -47,12 +47,15 @@ backup — angx-bridge never shares or merges identity across them.
 Losing a device's phrase loses both of that device's keys together;
 it has no bearing on any other device's identity.
 
-**4. Notification** — LXMF, Reticulum's native store-and-forward
-messaging, carries any message a local client wants delivered over the
-same offline transport as feed updates — not just from angx-bridge,
-from anything running on the device. Sideband, an open-source
-Reticulum client, is where they arrive. angx-bridge does not generate
-notifications; it makes the channel available.
+**4. Notification** — Bridge carries ANGX feed data over plain Reticulum
+— a separate channel from LXMF. LXMF, Reticulum's own store-and-forward
+messaging layer, is available on the same underlying mesh for anything
+that wants to send a human-readable message — not feed data, a
+different kind of payload entirely. angx-bridge does not use LXMF for
+feed updates and does not generate LXMF messages itself; it only
+ensures the device has a valid Reticulum destination, which LXMF (and
+Sideband, the client that displays LXMF messages) can use if a
+notification is ever built on top.
 
 ---
 
