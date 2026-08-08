@@ -69,11 +69,11 @@ notification is ever built on top.
   unresolved and depends on Reticulum's actual guaranteed behavior,
   not a design choice to make in the abstract.
   
-- **Attachments over Reticulum.** Signals themselves are small — a
-  `learning` signal's attachment, referenced separately, can run up to
-  10MB. Radio-based transport is not built for that. Does angx-bridge
-  carry attachments at all when offline, or only the pointer signal,
-  with the attachment fetched once real internet returns? Not decided.
+- **Attachments over Reticulum.** Resolved by the general Content
+  Persistence default — attachments are fetched on demand. Only the
+  pointer signal travels over Reticulum when offline; the attachment
+  itself waits for a real internet connection, same as everywhere else in
+  the system.
   
 - **Multiple relay-capable devices in range.** If two devices running
   both angx-client and angx-bridge, both with internet, are reachable
